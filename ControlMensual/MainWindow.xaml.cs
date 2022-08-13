@@ -16,6 +16,7 @@ using System.Data.OleDb;
 using System.Configuration;
 using System.Collections;
 using System.Data;
+using System.Text.RegularExpressions;
 
 namespace ControlMensual
 {
@@ -30,13 +31,16 @@ namespace ControlMensual
 
         private double gananciaTotal;
         private double total;
+        private double gananciaPorcent = 20;
 
         public MainWindow()
         {
             InitializeComponent();
             getData();
             loadMonto();
-         
+            textBox_Copy.IsReadOnly = true;
+            textBox.IsReadOnly = true;
+
 
 
         }
@@ -45,27 +49,48 @@ namespace ControlMensual
         {
 
         }
-
+        private static bool isValid(String str)
+        {
+            return Regex.IsMatch(str, @"^[a-zA-Z]+$");
+        }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            OleDbConnection con = new OleDbConnection();
-            con.ConnectionString = ConfigurationManager.ConnectionStrings["ControlMensual.Properties.Settings.Ganancias_DBConnectionString"].ToString();
-            con.Open();
-            OleDbCommand cmd = new OleDbCommand();
+            string date = fecha.Text;
+            string montos = Monto.Text;
+            string texto = Detalle.Text;
+           
 
-            cmd.CommandText = "insert into [Detalle_Ganacias](Fecha,Monto,Detalle)Values(@dt,@mt,@det)";
-            cmd.Parameters.AddWithValue("@dt", Convert.ToDateTime(fecha.Text));
-            cmd.Parameters.AddWithValue("@mt", Convert.ToDouble(Monto.Text));
-            cmd.Parameters.AddWithValue("@det", Detalle.Text);
-            cmd.Connection = con;
-            int a = cmd.ExecuteNonQuery();
-            if (a > 0)
+            if (date == "" )
             {
-                MessageBox.Show("Registro añadido");
-                loadMonto();
-                loadGanancia();
-                con.Close();
+                MessageBox.Show("Ingrese una fecha");
+
+            }else if (isValid(montos))
+            {
+                MessageBox.Show("Ingrese solo numeros");
             }
+            else
+            {
+                OleDbConnection con = new OleDbConnection();
+                con.ConnectionString = ConfigurationManager.ConnectionStrings["ControlMensual.Properties.Settings.Ganancias_DBConnectionString"].ToString();
+                con.Open();
+                OleDbCommand cmd = new OleDbCommand();
+
+                cmd.CommandText = "insert into [Detalle_Ganacias](Fecha,Monto,Detalle)Values(@dt,@mt,@det)";
+                cmd.Parameters.AddWithValue("@dt", Convert.ToDateTime(fecha.Text));
+                cmd.Parameters.AddWithValue("@mt", Convert.ToDouble(Monto.Text));
+                cmd.Parameters.AddWithValue("@det", Detalle.Text);
+                cmd.Connection = con;
+                int a = cmd.ExecuteNonQuery();
+                if (a > 0)
+                {
+                    MessageBox.Show("Registro añadido");
+                    loadMonto();
+                    loadGanancia();
+                    con.Close();
+                }
+            }
+
+            
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -130,9 +155,9 @@ namespace ControlMensual
 
 
 
-            gananciaTotal = total*20/100;
+            gananciaTotal = total*gananciaPorcent/100;
 
-            MessageBox.Show("Prbando" + total);
+           
 
             textBox_Copy.Text = gananciaTotal.ToString();
 
@@ -157,6 +182,18 @@ namespace ControlMensual
             dataGrid.ItemsSource = dt.AsDataView();
 
             con.Close();
+
+        }
+
+        private void Porcentaje_Ganancia_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void AddPorGanancia_Click(object sender, RoutedEventArgs e)
+        {
+            this.gananciaPorcent = Convert.ToDouble(Porcentaje_Ganancia.Text);
+            loadGanancia();
 
         }
     }

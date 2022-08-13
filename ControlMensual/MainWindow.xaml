@@ -25,6 +25,10 @@
         <DatePicker x:Name="fecha" HorizontalAlignment="Left" Margin="18,50,0,0" VerticalAlignment="Top" Height="29" Width="178"/>
         <DatePicker x:Name="datePicker" HorizontalAlignment="Left" Margin="20,191,0,0" VerticalAlignment="Top" Width="116"/>
         <DatePicker x:Name="datePicker1" HorizontalAlignment="Left" Margin="161,191,0,0" VerticalAlignment="Top" Width="117"/>
+        <TextBox x:Name="Porcentaje_Ganancia" HorizontalAlignment="Left" Margin="196,386,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextChanged="Porcentaje_Ganancia_TextChanged"/>
+        <Label x:Name="label_Copy6" Content="TOTAL:" HorizontalAlignment="Left" Margin="500,355,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label_Copy7" Content="Procentaje ganancia:" HorizontalAlignment="Left" Margin="197,355,0,0" VerticalAlignment="Top" RenderTransformOrigin="-6.398,0.656"/>
+        <Button x:Name="AddPorGanancia" Content="Agregar ganancia" HorizontalAlignment="Left" Margin="78,383,0,0" VerticalAlignment="Top" Click="AddPorGanancia_Click"/>
 
     </Grid>
 </Window>

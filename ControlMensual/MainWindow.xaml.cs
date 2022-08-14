@@ -86,6 +86,7 @@ namespace ControlMensual
                     MessageBox.Show("Registro añadido");
                     loadMonto();
                     loadGanancia();
+                    getData();
                     con.Close();
                 }
             }
